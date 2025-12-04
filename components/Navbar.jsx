@@ -4,13 +4,28 @@ import Link from "next/link";
 import { LuUserRoundPen } from "react-icons/lu";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { useState } from "react";
+import { useSession } from "next-auth/react"
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { signOut } from "next-auth/react"
 
 
 export default function Navbar() {
+    const { data: session } = useSession()
+    console.log(session);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const [navOpen, setNavOpen] = useState(false)
     console.log(navOpen);
-
 
     const navItems = [
         {
@@ -47,10 +62,41 @@ export default function Navbar() {
                 }
             </div>
 
-            <Link href={"/auth/signin"} className="flex items-center gap-1 text-lg hover:text-amber-600 max-lg:ml-auto z-40">
-                <p className="max-md:hidden">Sign In</p>
-                <LuUserRoundPen />
-            </Link>
+            {
+                session ?
+                    <div>
+                        <button
+                            id="basic-button"
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                        >
+                            <Avatar alt={session?.user?.name} src={session?.user?.image} />
+                        </button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            slotProps={{
+                                list: {
+                                    'aria-labelledby': 'basic-button',
+                                },
+                            }}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
+                    </div> :
+                    <Link href={"/auth/signin"} className="flex items-center gap-1 text-lg hover:text-amber-600 max-lg:ml-auto z-40">
+                        <p className="max-md:hidden">Sign In</p>
+                        <LuUserRoundPen />
+                    </Link>
+            }
+
+
 
             {/* mobile and tablet navbar view */}
             <div className={`h-dvh bg-white w-full lg:hidden absolute top-0 right-0 flex-col flex gap-12 items-center pt-20 ${navOpen ? "block" : "hidden"}`}>

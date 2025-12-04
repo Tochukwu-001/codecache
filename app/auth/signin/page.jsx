@@ -2,6 +2,7 @@ import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineApple } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
+import { signIn } from "@/auth"
 
 const page = () => {
     return (
@@ -22,10 +23,19 @@ const page = () => {
                     </div>
 
                     <div className='space-y-5'>
-                        <button className='border w-full border-gray-300 flex items-center justify-center gap-3 py-2'>
-                            <FcGoogle className='text-xl' />
-                            <span>Continue with Google</span>
-                        </button>
+
+                        <form
+                            action={async () => {
+                                "use server"
+                                await signIn("google")
+                            }}
+                        >
+                            <button className='border w-full border-gray-300 flex items-center justify-center gap-3 py-2'>
+                                <FcGoogle className='text-xl' />
+                                <span>Continue with Google</span>
+                            </button>
+                        </form>
+
                         <button className='border w-full border-gray-300 flex items-center justify-center gap-3 py-2'>
                             <AiOutlineApple className='text-xl' />
                             <span>Continue with Apple</span>

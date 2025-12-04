@@ -87,7 +87,7 @@ export default function Navbar() {
                         >
                             <MenuItem onClick={handleClose}>Profile</MenuItem>
                             <MenuItem onClick={handleClose}>My account</MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                            <MenuItem onClick={handleClose}><button onClick={() => signOut()}>Sign Out</button></MenuItem>
                         </Menu>
                     </div> :
                     <Link href={"/auth/signin"} className="flex items-center gap-1 text-lg hover:text-amber-600 max-lg:ml-auto z-40">

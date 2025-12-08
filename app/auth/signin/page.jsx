@@ -2,9 +2,17 @@ import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineApple } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
-import { signIn } from "@/auth"
+import { auth, signIn } from "@/auth"
+import { redirect } from 'next/navigation';
 
-const page = () => {
+const page = async () => {
+    const session = await auth()
+    // console.log(session);
+
+    if (session) {
+       redirect("/add-component")
+    }
+    
     return (
         <main className='min-h-dvh lg:w-1/3 mx-auto py-10 px-3'>
             <div className='flex items-center flex-col gap-10'>

@@ -64,7 +64,7 @@ export default function Navbar() {
 
             {
                 session ?
-                    <div>
+                    <div className="max-lg:ml-auto">
                         <button
                             id="basic-button"
                             aria-controls={open ? 'basic-menu' : undefined}
@@ -85,8 +85,8 @@ export default function Navbar() {
                                 },
                             }}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}><Link href={"/profile"}>My Account</Link></MenuItem>
+                            <MenuItem onClick={handleClose}><Link href={"/add-component"}>Add Component</Link></MenuItem>
                             <MenuItem onClick={handleClose}><button onClick={() => signOut()}>Sign Out</button></MenuItem>
                         </Menu>
                     </div> :

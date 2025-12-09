@@ -24,6 +24,9 @@ const ComponentForm = () => {
                 <Formik
                     initialValues={initialValues}
                     validationSchema={formValidation}
+                    onSubmit={(values)=>{
+                        console.log(values)                        
+                    }}
                 >
                     <Form className='space-y-5'>
                         <div className=''>

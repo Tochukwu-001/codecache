@@ -11,7 +11,7 @@ const page = async () => {
   }
   return (
     <main className='min-h-dvh'>
-        <ComponentForm/>
+        <ComponentForm session={session}/>
     </main>
   )
 }

@@ -3,8 +3,10 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button } from '@mui/material';
 import * as Yup from 'yup';
+import { collection, addDoc } from "firebase/firestore";
+import { db } from '@/config/firebase';
 
-const ComponentForm = () => {
+const ComponentForm = ({ session }) => {
 
     const formValidation = Yup.object({
         name: Yup.string().required("Please enter the component's name"),
@@ -24,8 +26,18 @@ const ComponentForm = () => {
                 <Formik
                     initialValues={initialValues}
                     validationSchema={formValidation}
-                    onSubmit={(values)=>{
-                        console.log(values)                        
+                    onSubmit = { async (values) => {
+                        const componentData = {
+                            ...values,
+                            author: session.user.name,
+                            img: session.user.image,
+                            timestamp: new Date().toLocaleDateString(),
+                            userId: session.user.id
+                        }
+                        // console.log(componentData)
+                        const docRef = await addDoc(collection(db, "library"), componentData)
+                        // console.log("Document written with ID: ", docRef.id);
+
                     }}
                 >
                     <Form className='space-y-5'>

@@ -27,16 +27,21 @@ const ComponentForm = ({ session }) => {
                     initialValues={initialValues}
                     validationSchema={formValidation}
                     onSubmit = { async (values) => {
-                        const componentData = {
-                            ...values,
-                            author: session.user.name,
-                            img: session.user.image,
-                            timestamp: new Date().toLocaleDateString(),
-                            userId: session.user.id
+                        try {      
+                            const componentData = {
+                                ...values,
+                                author: session.user.name,
+                                img: session.user.image,
+                                timestamp: new Date().toLocaleDateString(),
+                                userId: session.user.id
+                            }
+                            // console.log(componentData)
+                            const docRef = await addDoc(collection(db, "library"), componentData)
+                            // console.log("Document written with ID: ", docRef.id);
+                        } catch (error) {
+                            console.error("An error occured", error)
+                            alert("Something went wrong! Try again later.")
                         }
-                        // console.log(componentData)
-                        const docRef = await addDoc(collection(db, "library"), componentData)
-                        // console.log("Document written with ID: ", docRef.id);
 
                     }}
                 >

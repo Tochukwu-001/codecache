@@ -1,8 +1,32 @@
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from 'react'
 import { FaTrash } from "react-icons/fa6";
 import { IoCopyOutline } from "react-icons/io5";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '@/config/firebase';
 
 const page = () => {
+
+    const [components, setComponents] = useState([])
+
+    const handleFetch = async () => {
+        const componentArray = []
+        const querySnapshot = await getDocs(collection(db, "library"));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            const componentObject = {
+                id: doc.id,
+                ...doc.data()
+            }
+            componentArray.push(componentObject)
+        });
+        setComponents(componentArray)
+    }
+
+    useEffect(() => { handleFetch() }, [])
+
+
     return (
         <main className="min-h-dvh">
             <section className="bg-[url('/bg.png')] h-[20vh]">
@@ -11,33 +35,37 @@ const page = () => {
                 </div>
             </section>
 
-            <section className='grid lg:grid-cols-3 md:grid-cols-2 md:p-10 p-3'>
-                <div className='shadow-md p-4 rounded-md'>
-                    <div>
-                        <span>
-                            <img src="bg.png" alt="john doe" className='w-10 h-10 rounded-full' />
-                            <p>John Doe</p>
-                        </span>
-                        <button>
-                            <FaTrash />
-                        </button>
-                    </div>
+            <section className='grid lg:grid-cols-3 md:grid-cols-2 md:p-10 p-3 gap-5'>
+                {
+                    components.map((data, index) => (
+                        <div key={index} className='shadow-md p-4 rounded-md'>
+                            <div className='flex items-center justify-between'>
+                                <span className='flex items-center gap-2'>
+                                    <img src={data.img} alt={data.author} className='w-8 h-8 rounded-full' />
+                                    <p>{data.author}</p>
+                                </span>
+                                <button>
+                                    <FaTrash className='text-red-600' />
+                                </button>
+                            </div>
 
-                    <div>
-                        <h1>Drop Down Menu</h1>
-                        <p className='line-clamp-5'>
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt eaque dolore facilis exercitationem itaque! Laboriosam asperiores nulla ipsum numquam fugit sed, debitis, consectetur optio non vero laborum repellendus animi ex labore molestias vel. Culpa voluptatibus nisi ex delectus, minus repellendus aliquid dolor ut blanditiis distinctio in iusto beatae ea veritatis? Quibusdam non totam facere, numquam, hic error natus tempore repellat deserunt corrupti similique ducimus incidunt mollitia accusantium architecto, dolore earum ullam quod impedit quae neque voluptatem nesciunt! Vel ipsam cum molestias, voluptatem blanditiis corrupti sit minima dignissimos assumenda. Debitis veritatis pariatur, rem iusto dignissimos est hic expedita reprehenderit alias incidunt.
-                        </p>
-                    </div>
+                            <div>
+                                <h1 className='text-center my-4 font-semibold uppercase'>{data.name}</h1>
+                                <p className='line-clamp-5 text-sm mb-4'>
+                                    {data.component}
+                                </p>
+                            </div>
 
-                    <div>
-                        <p>12/34/2344</p>
-                        <span>
-                            <IoCopyOutline />
-                            <p>Copy Code</p>
-                        </span>
-                    </div>
-                </div>
+                            <div className='flex items-center justify-between'>
+                                <p className='text-sm text-gray-600'>{data.timestamp}</p>
+                                <span className='flex items-center gap-1 text-sm'>
+                                    <IoCopyOutline />
+                                    <p>Copy Code</p>
+                                </span>
+                            </div>
+                        </div>
+                    ))
+                }
             </section>
         </main>
     )

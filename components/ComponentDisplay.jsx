@@ -10,6 +10,7 @@ const ComponentDisplay = ({ session }) => {
 
     const [components, setComponents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [copiedId, setCopiedId] = useState(null);
 
     const handleFetch = async () => {
         const componentArray = []

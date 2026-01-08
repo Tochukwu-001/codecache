@@ -33,6 +33,16 @@ const ComponentDisplay = ({ session }) => {
         await deleteDoc(doc(db, "library", id))
     }
 
+    const copyToClipboard = async (text, id) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedId(id);
+            setTimeout(() => setCopiedId(null), 2000);
+        } catch (err) {
+            console.error("unable to copy code", err);
+        }
+    };
+
     return (
         <main className="min-h-dvh">
             <section className="bg-[url('/bg.png')] h-[20vh]">
@@ -69,10 +79,21 @@ const ComponentDisplay = ({ session }) => {
 
                                     <div className='flex items-center justify-between'>
                                         <p className='text-sm text-gray-600'>{data.timestamp}</p>
-                                        <span className='flex items-center gap-1 text-sm'>
-                                            <IoCopyOutline />
-                                            <p>Copy Code</p>
-                                        </span>
+                                        <div className="relative">
+                                            {copiedId === data.id && (
+                                                <span className="absolute -top-6 left-0 text-[10px] text-green-600 font-bold">
+                                                    Copied!
+                                                </span>
+                                            )}
+
+                                            <span
+                                                className="flex items-center gap-1 text-sm cursor-pointer"
+                                                onClick={() => copyToClipboard(data.component, data.id)}
+                                            >
+                                                <IoCopyOutline />
+                                                <p>Copy Code</p>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             ))
